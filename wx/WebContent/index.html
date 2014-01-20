@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<link rel="stylesheet" href="resources/plugs/jquery-ui-1.10.3/css/start/jquery-ui-1.10.3.custom.css" type="text/css" />
+
+<script type="text/javascript" src="resources/plugs/jquery-ui-1.10.3/js/jquery-1.9.1.js" ></script>
+<script type="text/javascript" src="resources/plugs/jquery-ui-1.10.3/js/jquery-ui-1.10.3.custom.js" ></script>
+
+<style>
+body{
+	background-image: url("bg.jpg");
+}
+
+li{
+	list-style: none;
+}
+#content{
+	text-align:left;
+	width: 80%;
+	height: 100%;
+	border: 3px;
+	border-color: red;
+	margin-top: 60px;
+	max-width: 800px;
+	height:80%px;
+}
+#content li{
+	padding-top:20px;
+	padding:10px;
+	float:left;
+	list-style: none;
+	width:130px;
+	height:130px;
+	text-align:center;
+}
+#content li .text{
+	border-radius: 7px;
+	height:25px;
+	line-height:25px;
+	width:80%;
+	margin:0 auto;
+	background: blue;
+	text-align: center;
+	color:white;
+	-moz-opacity:0.6;
+	background: rgba(0, 0, 0, 0.6);
+	filter: alpha(opacity=60);
+}
+
+.iconImg{
+	width:50px;
+	height:50px;
+	margin-top: 10px;
+}
+.topDiv{
+	position:absolute;
+	margin:0 auto;
+	background-color:white;
+	width: 170px;
+	height: 34px;
+	top:10px; 
+	left:50%;
+	margin-left:-100px;
+	text-align: center;
+}
+.topDiv li{
+	width: 40px;
+	height:34px;
+	float: left;
+	line-height: 34px;
+	
+}
+.draggable { width: 100px; height: 100px; float: left; margin: 0 10px 10px 0;
+	-moz-opacity:0;
+	background: rgba(175, 175, 175, 0);
+	border-radius: 10px;
+    filter: alpha(opacity=0);
+    border: 0px;
+}
+.draggable:HOVER { width: 100px; height: 100px; float: left; margin: 0 10px 10px 0;
+	-moz-opacity:0.5;
+	background: rgba(175, 175, 175, 0.5);
+	border-radius: 10px;
+    filter: alpha(opacity=50);   
+}
+.ui-icon-normallink { background-position: -52px -80px; }
+</style>
+<script>
+$(document).ready(function(){
+	$("#content li div").each(function(){
+		$(this).draggable({ containment: "#content",grid: [ 150, 150 ] });
+		$(this).sortable({
+			//revert: true
+		});
+		$(this).bind("click",function(){
+			var dialog="<div><iframe src='www.baidu.com' frameborder='0' scrolling='auto' width='100%' height='100%'  ></iframe></div>";
+			
+			mm($(".text",this).html(),dialog);
+			/*
+			$(dialog).dialog({
+				title:$(".text",this).html(),
+				height: 400,
+				width:600,
+				modal: false
+			});
+			*/
+		})
+	});
+	
+});
+
+
+function mm(title,data){
+	var rg=/'/g;
+	var dialog = $("<div title='"+ title.replace(rg,' ') +"'><p>"+ data +"</p></div>");
+	dialog.dialog({
+		autoOpen: false,
+		show: "blind",
+		hide: "blind",//  explode
+		width:530,
+		height:410,
+		close:function(event, ui) {$(this).dialog( "destroy" ).remove();},//$(this).dialog( "destroy" ).remove();alert('s');
+		open: function (event, ui) {
+			var $dialog = $(this);//alert($dialog.html());
+			$('.ui-dialog-title', $dialog.parent()).css('width','70%'); // 界定选取范围，重点。
+			var atext = $(".ui-dialog-titlebar-close", $dialog.parent()).before('<a href="#" class="ui-dialog-titlebar-min ui-corner-all" role="button"><span class="ui-icon ui-icon-minusthick">minusthick</span></a><a href="#" class="ui-dialog-titlebar-max ui-corner-all" role="button"><span class="ui-icon ui-icon-extlink">extlink</span></a>');
+			$(".ui-dialog-titlebar .ui-icon", $dialog.parent()).click(function () {
+				var spantext = $(this).text();
+				//alert("ok:ui-span" + spantext);
+				if (spantext == "extlink") {
+					if (window.screen) {              //判断浏览器是否支持window.screen判断浏览器是否支持screen
+						var myw = $("body").width();   //定义一个myw，接受到当前全屏的宽
+						var myh = screen.availHeight-150;  //定义一个myw，接受到当前全屏的高
+						//window.moveTo(0, 0);           //把window放在左上脚
+						//window.resizeTo(myw, myh);     //把当前窗体的长宽跳转为myw和myh
+						var di=$dialog.dialog({
+							position: ['left', 'top'],
+							width: myw,
+							height: myh
+						});
+						if($(this).width()==$("body").width()){
+							$dialog.dialog({
+								position: ['left', 'top'],
+								width: 640,
+								height: 480
+							});
+						}else{
+							$dialog.dialog({
+								position: ['left', 'top'],
+								width: myw,
+								height: myh
+							});
+						}
+					} else {
+						$dialog.dialog({
+							position: 'center',
+							width: 640,
+							height: 480
+						});
+					}
+				} else if (spantext == "minusthick") {
+					$dialog.dialog({
+						position: ["left",'bottom'],
+						width: 40,
+						height: 20
+					});
+				}else if (spantext == "close") {
+					// alert('s');
+				}else {
+					//alert("请选择正确的图标,谢谢.");
+				}
+			});
+		}
+	});
+	dialog.dialog("open");
+	return false;
+}
+
+</script>
+</head>
+<body >
+<center>
+
+<div class="topDiv" >
+
+<li>1</li>
+<li>2</li>
+<li>3</li>
+<li>4</li>
+</div>
+<div id="content" >
+<ul>
+<li>
+<div class="draggable ui-widget-content">
+<image class="iconImg" src="rw.png" />
+<div class="text">你好</div>
+</div>
+
+</li>
+
+<li>
+<div class="draggable ui-widget-content">
+<image class="iconImg" src="rw.png" />
+<div class="text">你好</div>
+</div>
+</li>
+<li>
+<div class="draggable ui-widget-content">
+<image class="iconImg" src="rw.png" />
+<div class="text">你好</div>
+</div>
+</li>
+<li>
+<div class="draggable ui-widget-content">
+<image class="iconImg" src="rw.png" />
+<div class="text">你好</div>
+</div>
+</li>
+<li>
+<div class="draggable ui-widget-content">
+<image class="iconImg" src="rw.png" />
+<div class="text">你好</div>
+</div>
+</li>
+<li>
+<div class="draggable ui-widget-content">
+<image class="iconImg" src="rw.png" />
+<div class="text">你好</div>
+</div>
+</li>
+<li>
+<div class="draggable ui-widget-content">
+<image class="iconImg" src="rw.png" />
+<div class="text">你好</div>
+</div>
+</li>
+<li>
+<div class="draggable ui-widget-content">
+<image class="iconImg" src="rw.png" />
+<div class="text">你好</div>
+</div>
+</li>
+</ul>
+
+
+</div>
+</center>
+</body>
+</html>

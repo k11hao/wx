@@ -1,0 +1,17 @@
+.mytable {
+    border-collapse: collapse;
+    width: 100%;
+    text-align: left;
+    font-size: 12px;
+}
+
+.mytable tr{
+	height: 35px
+}
+.mytable td,th{
+	padding-left: 5px
+}
+.mytable tbody{
+	border-bottom: 1px solid #404040;
+	background-color: #E0E0E0
+}
